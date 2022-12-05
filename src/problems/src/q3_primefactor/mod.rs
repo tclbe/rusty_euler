@@ -18,6 +18,41 @@ fn primes_less_than(n: i64) -> Vec<i64> {
     primes
 }
 
+fn is_prime(n: i64) -> bool {
+    if n % 2 == 0 {
+        return false;
+    }
+    let sqrt_n = f64::sqrt(n as f64);
+    for i in (3..sqrt_n as i64).step_by(2) {
+        if n % i == 0 {
+            return false;
+        }
+    }
+    return true;
+}
+
+fn largest_prime_factor(n: i64) -> i64 {
+    let mut n = n.clone();
+    let mut largest_prime_factor = 2;
+
+    while n % 2 == 0 {
+        n = n / 2;
+    }
+
+    let sqrt_n = f64::sqrt(n as f64);
+
+    for i in (3..sqrt_n as i64).step_by(2) {
+        if is_prime(i) {
+            if n % i == 0 {
+                largest_prime_factor = i;
+                n = n / i;
+            }
+        }
+    }
+
+    largest_prime_factor
+}
+
 fn prime_factorise(n: i64) -> Vec<i64> {
     let sqrt_n = f64::sqrt(n as f64);
     let primes = primes_less_than(sqrt_n as i64);
@@ -39,14 +74,37 @@ fn prime_factorise(n: i64) -> Vec<i64> {
     factorisation
 }
 
-pub fn solve() -> i64 {
+pub fn solve_full_factorisation() -> i64 {
     let prime_factorisation = prime_factorise(600851475143);
     return *prime_factorisation.last().unwrap();
+}
+
+pub fn solve() -> i64 {
+    let largest_prime = largest_prime_factor(600851475143);
+    return largest_prime;
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn is_prime_29() {
+        let result = is_prime(29);
+        assert_eq!(result, true)
+    }
+
+    #[test]
+    fn is_not_prime_81() {
+        let result = is_prime(81);
+        assert_eq!(result, false)
+    }
+
+    #[test]
+    fn largest_prime_example_correct() {
+        let result = largest_prime_factor(13195);
+        assert_eq!(result, 29)
+    }
 
     #[test]
     fn primes_under_20_correct() {
@@ -62,6 +120,12 @@ mod tests {
 
     #[test]
     #[ignore]
+    fn solution_is_correct_full_factorisation() {
+        let result = solve_full_factorisation();
+        assert_eq!(result, 6857)
+    }
+
+    #[test]
     fn solution_is_correct() {
         let result = solve();
         assert_eq!(result, 6857)
