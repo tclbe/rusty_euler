@@ -1,15 +1,7 @@
-fn sum_multiples(n: i32) -> i32 {
-    let mut sum = 0;
-    for i in 1..n {
-        if i % 3 == 0 || i % 5 == 0 {
-            sum += i
-        }
-    }
-    return sum;
-}
+fn sum_multiples(n: i64) -> i64 {
+    let result: i64 = (1..n).filter(|x| x % 3 == 0 || x % 5 == 0).sum();
 
-pub fn solve() -> i32 {
-    sum_multiples(1000)
+    return result;
 }
 
 #[cfg(test)]
@@ -24,7 +16,7 @@ mod tests {
 
     #[test]
     fn solution_is_correct() {
-        let result = solve();
+        let result = sum_multiples(1000);
         assert_eq!(result, 233168)
     }
 }
