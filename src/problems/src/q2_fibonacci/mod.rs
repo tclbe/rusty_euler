@@ -1,29 +1,17 @@
+use std::iter::successors;
+
 fn fib_range(max_term: i32) -> Vec<i32> {
-    let mut result: Vec<i32> = vec![1, 2];
+    let fib_iter = successors(Some((0, 1)), |(f1, f2)| Some((*f2, f1 + f2)));
 
-    while result.last().unwrap() <= &max_term {
-        let length = result.len();
-        result.push(result[length - 2] + result[length - 1]);
-    }
+    let fib_terms = fib_iter.take_while(|(_, f2)| f2 <= &max_term);
 
-    if result.last().unwrap() > &max_term {
-        result.pop();
-    }
-
-    return result;
+    return fib_terms.map(|(_, f2)| f2).collect::<Vec<i32>>();
 }
 
-pub fn solve() -> i32 {
+fn solve() -> i32 {
     let fib = fib_range(4 * i32::pow(10, 6));
 
-    let mut sum = 0;
-    for i in fib {
-        if i % 2 == 0 {
-            sum += i;
-        }
-    }
-
-    sum
+    fib.iter().filter(|x| **x % 2 == 0).sum()
 }
 
 #[cfg(test)]
@@ -31,15 +19,15 @@ mod tests {
     use super::*;
 
     #[test]
-    fn fib_first_two_terms_correct() {
+    fn fib_first_three_terms_correct() {
         let result = fib_range(2);
-        assert_eq!(result, vec![1, 2])
+        assert_eq!(result, vec![1, 1, 2])
     }
 
     #[test]
     fn fib_terms_under_10_correct() {
         let result = fib_range(10);
-        assert_eq!(result, vec![1, 2, 3, 5, 8])
+        assert_eq!(result, vec![1, 1, 2, 3, 5, 8])
     }
 
     #[test]
