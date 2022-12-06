@@ -16,11 +16,15 @@ fn sieve_of_erathosthenes(n: u64) -> Vec<u64> {
 }
 
 fn is_prime(n: u64) -> bool {
+    if n == 2 {
+        return true;
+    }
+
     if n % 2 == 0 {
         return false;
     }
     let sqrt_n = f64::sqrt(n as f64);
-    for i in (3..sqrt_n as u64).step_by(2) {
+    for i in (3..=sqrt_n as u64).step_by(2) {
         if n % i == 0 {
             return false;
         }
@@ -86,15 +90,21 @@ mod tests {
     use super::*;
 
     #[test]
-    fn is_prime_29() {
-        let result = is_prime(29);
-        assert_eq!(result, true)
+    fn primes_are_primes() {
+        let test_vals = vec![2, 3, 5, 7, 11, 13, 17, 19];
+        for val in test_vals {
+            let result = is_prime(val);
+            assert_eq!(result, true, "{val} is prime!")
+        }
     }
 
     #[test]
-    fn is_not_prime_81() {
-        let result = is_prime(81);
-        assert_eq!(result, false)
+    fn not_primes_are_not_primes() {
+        let test_vals = vec![4, 6, 8, 9, 10, 12, 14, 15, 16, 18];
+        for val in test_vals {
+            let result = is_prime(val);
+            assert_eq!(result, false, "{val} is not prime!")
+        }
     }
 
     #[test]
