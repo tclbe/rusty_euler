@@ -1,29 +1,26 @@
-fn primes_less_than(n: i64) -> Vec<i64> {
-    let mut primes: Vec<i64> = vec![2];
+fn sieve_of_erathosthenes(n: u64) -> Vec<u64> {
+    let mut primes: Vec<u64> = (2..=n).collect();
 
-    for i in (3..n).step_by(2) {
-        let mut is_prime = true;
-        for prime in &primes {
-            if i % prime == 0 {
-                is_prime = false;
-                break;
+    for i in 0..primes.len() {
+        let prime = primes[i];
+
+        if primes[i] == 0 {
+            continue;
+        } else {
+            for j in (i + prime as usize..primes.len()).step_by(prime as usize) {
+                primes[j as usize] = 0;
             }
         }
-
-        if is_prime {
-            primes.push(i)
-        }
     }
-
-    primes
+    return primes.into_iter().filter(|x| *x != 0).collect::<Vec<u64>>();
 }
 
-fn is_prime(n: i64) -> bool {
+fn is_prime(n: u64) -> bool {
     if n % 2 == 0 {
         return false;
     }
     let sqrt_n = f64::sqrt(n as f64);
-    for i in (3..sqrt_n as i64).step_by(2) {
+    for i in (3..sqrt_n as u64).step_by(2) {
         if n % i == 0 {
             return false;
         }
@@ -31,7 +28,7 @@ fn is_prime(n: i64) -> bool {
     return true;
 }
 
-fn largest_prime_factor(n: i64) -> i64 {
+fn largest_prime_factor(n: u64) -> u64 {
     let mut n = n.clone();
     let mut largest_prime_factor = 2;
 
@@ -41,7 +38,7 @@ fn largest_prime_factor(n: i64) -> i64 {
 
     let sqrt_n = f64::sqrt(n as f64);
 
-    for i in (3..sqrt_n as i64).step_by(2) {
+    for i in (3..sqrt_n as u64).step_by(2) {
         if is_prime(i) {
             if n % i == 0 {
                 largest_prime_factor = i;
@@ -53,10 +50,10 @@ fn largest_prime_factor(n: i64) -> i64 {
     largest_prime_factor
 }
 
-fn prime_factorise(n: i64) -> Vec<i64> {
+fn prime_factorise(n: u64) -> Vec<u64> {
     let sqrt_n = f64::sqrt(n as f64);
-    let primes = primes_less_than(sqrt_n as i64);
-    let mut factorisation: Vec<i64> = vec![];
+    let primes = sieve_of_erathosthenes(sqrt_n as u64);
+    let mut factorisation: Vec<u64> = vec![];
 
     let mut n = n.clone();
 
@@ -74,12 +71,12 @@ fn prime_factorise(n: i64) -> Vec<i64> {
     factorisation
 }
 
-pub fn solve_full_factorisation() -> i64 {
+pub fn solve_full_factorisation() -> u64 {
     let prime_factorisation = prime_factorise(600851475143);
     return *prime_factorisation.last().unwrap();
 }
 
-pub fn solve() -> i64 {
+pub fn solve() -> u64 {
     let largest_prime = largest_prime_factor(600851475143);
     return largest_prime;
 }
@@ -108,7 +105,7 @@ mod tests {
 
     #[test]
     fn primes_under_20_correct() {
-        let result = primes_less_than(20);
+        let result = sieve_of_erathosthenes(20);
         assert_eq!(result, vec![2, 3, 5, 7, 11, 13, 17, 19])
     }
 
@@ -119,7 +116,6 @@ mod tests {
     }
 
     #[test]
-    #[ignore]
     fn solution_is_correct_full_factorisation() {
         let result = solve_full_factorisation();
         assert_eq!(result, 6857)
