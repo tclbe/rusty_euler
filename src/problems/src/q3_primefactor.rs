@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 fn sieve_of_erathosthenes(n: u64) -> Vec<u64> {
     let mut primes: Vec<u64> = (2..=n).collect();
 
@@ -54,7 +56,7 @@ fn largest_prime_factor(n: u64) -> u64 {
     largest_prime_factor
 }
 
-fn prime_factorise(n: u64) -> Vec<u64> {
+pub fn prime_factorise(n: u64) -> Vec<u64> {
     let sqrt_n = f64::sqrt(n as f64);
     let primes = sieve_of_erathosthenes(sqrt_n as u64);
     let mut factorisation: Vec<u64> = vec![];
@@ -72,7 +74,19 @@ fn prime_factorise(n: u64) -> Vec<u64> {
         }
     }
 
+    if primes.len() == 0 {
+        return vec![n];
+    }
+
     factorisation
+}
+
+pub fn factorisation_to_hashmap(factors: Vec<u64>) -> HashMap<u64, u64> {
+    let mut result: HashMap<u64, u64> = HashMap::new();
+    for factor in factors {
+        result.entry(factor).and_modify(|x| *x += 1).or_insert(1);
+    }
+    result
 }
 
 pub fn solve_full_factorisation() -> u64 {
