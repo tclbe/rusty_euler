@@ -74,8 +74,8 @@ pub fn prime_factorise(n: u64) -> Vec<u64> {
         }
     }
 
-    if primes.len() == 0 {
-        return vec![n];
+    if n >= 2 {
+        factorisation.push(n);
     }
 
     factorisation
@@ -133,6 +133,14 @@ mod tests {
         assert_eq!(result, vec![2, 3, 5, 7, 11, 13, 17, 19])
     }
 
+    #[test]
+    fn prime_factorise_correct() {
+        assert_eq!(prime_factorise(2), [2]);
+        assert_eq!(prime_factorise(3), [3]);
+        assert_eq!(prime_factorise(4), [2, 2]);
+        assert_eq!(prime_factorise(5), [5]);
+        assert_eq!(prime_factorise(6), [2, 3]);
+    }
     #[test]
     fn prime_factorise_example_correct() {
         let result = prime_factorise(13195);
