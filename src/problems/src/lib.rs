@@ -4,3 +4,4 @@ pub mod q2_fibonacci;
 pub mod q3_primefactor;
 pub mod q4_palindrome;
 pub mod q5_smallestmultiple;
+pub mod q6_diffsquares;
